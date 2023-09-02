@@ -1,41 +1,43 @@
 @echo off
-setlocal
+:: Batch script to request administrator privileges
 
-:: Check if the flag file exists to skip permission setup
-set "flagFile=C:\Program Files\permissions_set.flag"
-if not exist "%flagFile%" (
-    :: Set permissions
-    icacls "C:\Program Files" /inheritance:d
-    icacls "C:\Program Files" /grant "%username%:(OI)(CI)F"
-    icacls "C:\Program Files" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F"
-
-    :: Create the flag file to indicate permissions are set
-    echo Permissions set > "%flagFile%"
+:: Check for admin rights and restart if not already running as admin
+NET SESSION >nul 2>&1
+if %errorLevel% == 0 (
+    echo Administrator rights confirmed.
+) else (
+    echo Requesting administrator rights...
+    powershell -Command "Start-Process '%~0' -Verb RunAs"
+    exit /b
 )
 
+:: The rest of your script goes here
+
+:: Set permissions
+icacls "C:\Program Files" /inheritance:d
+icacls "C:\Program Files" /grant "%username%:(OI)(CI)F"
+icacls "C:\Program Files" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F"
+
 :: Download zip
-set "url=https://github.com/oragetech/about-projects/raw/main/clientsetup.zip"
+set "url=https://github.com/oragetech/about-projects/raw/main/clientsidesetup.zip"
 set "downloadFolderPath=C:\Program Files\Oragetechnologies"
-set "zipFileName=serversetup.zip"
-set "extractFolder=Guest"
+set "zipFileName=Setup.zip"
+set "extractFolder=OrageTechnologies"
 
 if not exist "%downloadFolderPath%" (
     mkdir "%downloadFolderPath%"
 )
 
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%downloadFolderPath%\%zipFileName%')"
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%downloadFolderPath%%zipFileName%')"
 
 :: Extract zip
-powershell -Command "Expand-Archive -Path '%downloadFolderPath%\%zipFileName%' -DestinationPath '%downloadFolderPath%\%extractFolder%'"
+powershell -Command "Expand-Archive -Path '%downloadFolderPath%%zipFileName%' -DestinationPath '%downloadFolderPath%%extractFolder%'"
 
 :: Run exe file
-set "executablePath=%downloadFolderPath%\%extractFolder%\Debug\clientConsole.exe"
+set "executablePath=%downloadFolderPath%%extractFolder%\Debug\clientConsole.exe"
 start "" "%executablePath%"
 
-:: Delete the zip file
-del "%downloadFolderPath%\%zipFileName%"
+:: End of your script
 
-:: Close the Command Prompt window
+:: Pause to keep the command prompt window open (optional)
 exit
-
-endlocal
