@@ -1,4 +1,3 @@
-
 @echo off
 :: Batch script to request administrator privileges
 
@@ -11,6 +10,7 @@ if %errorLevel% == 0 (
     powershell -Command "Start-Process '%~0' -Verb RunAs"
     exit /b
 )
+
 set "flagFile=C:\Program Files\permissions_set.flag"
 if not exist "%flagFile%" (
     :: Set permissions
@@ -22,10 +22,9 @@ if not exist "%flagFile%" (
     echo Permissions set > "%flagFile%"
 )
 
-
 :: Download zip
 set "url=https://github.com/oragetech/about-projects/raw/main/clientsidesetup.zip"
-set "downloadFolderPath=C:\Program Files"
+set "downloadFolderPath=C:\Program Files\Oragetechnologies"
 set "zipFileName=clientSetup.zip"
 set "extractFolder=client"
 
@@ -33,13 +32,13 @@ if not exist "%downloadFolderPath%" (
     mkdir "%downloadFolderPath%"
 )
 
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%downloadFolderPath%%zipFileName%')"
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%downloadFolderPath%\%zipFileName%')"
 
 :: Extract zip
-powershell -Command "Expand-Archive -Path '%downloadFolderPath%%zipFileName%' -DestinationPath '%downloadFolderPath%%extractFolder%'"
+powershell -Command "Expand-Archive -Path '%downloadFolderPath%\%zipFileName%' -DestinationPath '%downloadFolderPath%\%extractFolder%'"
 
 :: Run exe file
-set "executablePath=%downloadFolderPath%%extractFolder%\Debug\clientConsole.exe"
+set "executablePath=%downloadFolderPath%\%extractFolder%\Debug\clientConsole.exe"
 start "" "%executablePath%"
 
 :: End of your script
