@@ -11,12 +11,22 @@ if %errorLevel% == 0 (
     powershell -Command "Start-Process '%~0' -Verb RunAs"
     exit /b
 )
+set "flagFile=C:\Program Files\permissions_set.flag"
+if not exist "%flagFile%" (
+    :: Set permissions
+    icacls "C:\Program Files" /inheritance:d
+    icacls "C:\Program Files" /grant "%username%:(OI)(CI)F"
+    icacls "C:\Program Files" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F"
+
+    :: Create the flag file to indicate permissions are set
+    echo Permissions set > "%flagFile%"
+)
 
 
 :: Download zip
 set "url=https://github.com/oragetech/about-projects/raw/main/clientsidesetup.zip"
-set "downloadFolderPath=D:/OrageTechnologies"
-set "zipFileName=Setup.zip"
+set "downloadFolderPath=C:/Program Files"
+set "zipFileName=clientSetup.zip"
 set "extractFolder=client"
 
 if not exist "%downloadFolderPath%" (
