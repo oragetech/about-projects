@@ -25,7 +25,7 @@ if not exist "%flagFile%" (
 
 :: Download zip
 set "url=https://github.com/oragetech/about-projects/raw/main/clientsidesetup.zip"
-set "downloadFolderPath=C:/Program Files"
+set "downloadFolderPath=C:\Program Files"
 set "zipFileName=clientSetup.zip"
 set "extractFolder=client"
 
