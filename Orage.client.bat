@@ -1,3 +1,4 @@
+
 @echo off
 :: Batch script to request administrator privileges
 
@@ -11,18 +12,12 @@ if %errorLevel% == 0 (
     exit /b
 )
 
-:: The rest of your script goes here
-
-:: Set permissions
-icacls "C:\Program Files" /inheritance:d
-icacls "C:\Program Files" /grant "%username%:(OI)(CI)F"
-icacls "C:\Program Files" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F"
 
 :: Download zip
 set "url=https://github.com/oragetech/about-projects/raw/main/clientsidesetup.zip"
-set "downloadFolderPath=C:\Program Files\Oragetechnologies"
+set "downloadFolderPath=D:/OrageTechnologies"
 set "zipFileName=Setup.zip"
-set "extractFolder=OrageTechnologies"
+set "extractFolder=client"
 
 if not exist "%downloadFolderPath%" (
     mkdir "%downloadFolderPath%"
